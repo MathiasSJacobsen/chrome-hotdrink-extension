@@ -5,68 +5,90 @@ import './App.css';
  
 function App() {
   const [title, setTitle] = React.useState('');
-  const [test, setTest] = React.useState();
+  const [test, setTest] = React.useState({variables: [
+    {name: 'test', value: 'test'}
+  ]});
 
   const [headlines, setHeadlines] = React.useState<string[]>([]);
-
+/*
   React.useEffect(() => {
+
+    window.addEventListener('DOMContentLoaded', () => {
+      let bg = chrome.extension.getBackgroundPage();
     /**
      * We can't use "chrome.runtime.sendMessage" for sending messages from React.
      * For sending messages from React we need to specify which tab to send it to.
-     */
+     
     chrome.tabs && chrome.tabs.query({
       active: true,
       currentWindow: true
     }, tabs => {
-      /**
-       * Sends a single message to the content script(s) in the specified tab,
-       * with an optional callback to run when a response is sent back.
-       *
-       * The runtime.onMessage event is fired in each content script running
-       * in the specified tab for the current extension.
-       */
-      chrome.tabs.sendMessage(
-        tabs[0].id || 0,
-        { type: 'GET_DOM' } as DOMMessage,
-        (response: DOMMessageResponse) => {
-          setTitle(response.title);
-          setHeadlines(response.headlines);
-          setTest(response.test);
-        });
-      });
+      
+      let currentTabId = tabs[0].id;
+      let currentPerf = bg!.perfWatch[currentTabId!];
+      let chromeWindow = bg!.chromeWindow[currentTabId!];
+      console.log('currentTabId', currentTabId);
+
+      // safety check: when page is still loading
+      if (!currentPerf) {
+          return;
+      }
+      if (!chromeWindow) {
+          return;
+      }
+
+      setTest(chromeWindow)
+      
     });
-    console.log(test)
+
+    });
+      
+  }, []);
+*/
+  setInterval(() => {
+    let bg = chrome.extension.getBackgroundPage();
+    chrome.tabs && chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, tabs => {
+      let currentTabId = tabs[0].id;
+      let currentPerf = bg!.perfWatch[currentTabId!];
+      let chromeWindow = bg!.chromeWindow[currentTabId!];
+
+      // safety check: when page is still loading
+      if (!currentPerf) {
+          return;
+      }
+      if (!chromeWindow) {
+          return;
+      }
+
+      setTest(chromeWindow)
+      
+    });
+  }, 1000);
+
+
+
+
+
   return (
     <div className="App">
-      <h1>SEO Extension built with React!</h1>
+      <div>
+        <p>Performance Metrics</p>
+        {test && test.variables.map((item, index) => {
+          return (
+            <div>
+              <p>{item.name}</p>
+              <p>{item.value}</p>
+            </div>
+          )
+        })}
 
-      <ul className="SEOForm">
-        <li className="SEOValidation">
-          <div className="SEOValidationField">
-            <span className="SEOValidationFieldTitle">Title</span>
-            <span className={`SEOValidationFieldStatus ${title.length < 30 || title.length > 65 ? 'Error' : 'Ok'}`}>
-              {title.length} Characters
-            </span>
-          </div>
-          <div className="SEOVAlidationFieldValue">
-            {title}
-          </div>
-        </li>
-        <li className="SEOValidation">
-          <div className="SEOValidationField">
-            <span className="SEOValidationFieldTitle">Main Heading</span>
-            <span className={`SEOValidationFieldStatus ${headlines.length !== 1 ? 'Error' : 'Ok'}`}>
-              {headlines.length}
-            </span>
-          </div>
-          <div className="SEOVAlidationFieldValue">
-            <ul>
-              {headlines.map((headline, index) => (<li key={index}>{headline}</li>))}
-            </ul>
-          </div>
-        </li>
-      </ul>
-      <div>{test}</div>
+        <div className='perf-tile' id='tile-section'>
+        </div>
+    </div>
+
     </div>
   );
 }

@@ -1,3 +1,4 @@
+/*
 import { DOMMessage, DOMMessageResponse } from "../types"; 
  
  // Function called when a new message is received
@@ -29,6 +30,29 @@ const messagesFromReactAppListener = (
 /**
 * Fired when a message is sent from either an extension process or a content script.
 */
+/*
 chrome.runtime.onMessage.addListener(messagesFromReactAppListener);
 
-export {};
+export {};ç
+
+*/
+
+function injectScript(file_path: string, tag: string) {
+    var node = document.getElementsByTagName(tag)[0];
+    var script = document.createElement('script');
+    script.setAttribute('type', 'text/javascript');
+    script.setAttribute('src', file_path);
+    node.appendChild(script);
+}
+
+injectScript(chrome.extension.getURL('./static/js/injectScript.js'), 'body');
+
+
+window.addEventListener('message', function(event) {
+    if (event.data.type && (event.data.type == "FROM_PAGE"))
+    {
+        chrome.runtime.sendMessage({essential: event.data.essential, test: event.data.test});
+    }});
+    
+export {}   
+
