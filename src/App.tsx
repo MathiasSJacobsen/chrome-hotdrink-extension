@@ -1,10 +1,14 @@
-import React from 'react';  
-import { ConstraintSystem, DOMMessage, DOMMessageResponse } from './types'; 
+import {useEffect, useState} from 'react';  
+import { ConstraintSystem } from './types'; 
 
 import './App.css';
  
 function App() {
-  const [constraintSystem, setConstraintSystem] = React.useState<ConstraintSystem>({});
+  const [constraintSystem, setConstraintSystem] = useState<ConstraintSystem>({});
+
+  useEffect(() => {
+    updateConstraintVariables();
+  }, []);
 
 
   const updateConstraintVariables = () => {
@@ -30,20 +34,16 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      <div className='contentWrapper'>
         <p>HotDrink variables:</p>
-        <button onClick={updateConstraintVariables}>Click me!</button>
-        {constraintSystem.variables && constraintSystem.variables.map((item, index) => {
+        {constraintSystem.variables ? constraintSystem.variables.map((item, index) => {
           return (
-            <div>
-              <p>{item.name}</p>
-              <p>{item.value}</p>
+            <div key={index} >
+              <p>{item.name}: {item.value}</p>
             </div>
           )
-        })}
-
-        <div className='perf-tile' id='tile-section'>
-        </div>
+        }) : (<p>This page does not have any constraint systems under the <code>window.constraintSystem</code></p>)}
+        <button onClick={updateConstraintVariables}>Fetch new values</button>
     </div>
 
     </div>

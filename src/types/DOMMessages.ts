@@ -7,10 +7,10 @@ export type DOMMessageResponse = {
 }
 
 export type ConstraintSystem = {
-    variables?: [{
+    variables?: {
         name: string;
         value: string | number | boolean;
-    }]
+    }[]
     // Add more properties here, if needed in the extension
 }
 
