@@ -1,41 +1,23 @@
-const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key:any, value:any) => {
-      if (typeof value === 'object' && value !== null) {
-        if (seen.has(value)) {
-          return;
-        }
-        seen.add(value);
-      }
-      return value;
-    };
-  };
-
-function parseEsentialDetails() {
-    let main: {[name:string]:any} = {};
-
-    main.performance = JSON.parse(JSON.stringify(window.performance)) || null;
-    
-    return main;
-}
+import { ConstraintSystem } from "../types";
 
 function parseConstraintSystem() {
-    let main: {
-        variables: {
-            name: String,
-            value: string | number | boolean,
-        },
-    } = {variables: {name: "", value: ""}};
-    // @ts-ignore
-    main.variables = JSON.parse(JSON.stringify(Array.from(window.constraintSystem.variables()).map(e => { return { "value": e["value"], "name": e["name"] }}))) || null;
-    
+    let main: ConstraintSystem = {};
+    try {
+        // @ts-ignore
+        main.variables = JSON.parse(JSON.stringify(Array.from(window.constraintSystem.variables()).map(e => { return { "value": e["value"], "name": e["name"] }}))) || null;
+    } catch (error) {
+        // Not a page with a HotDrink constraint system
+        return undefined;
+    }
     return main;
 }
 
 setInterval(() => {
-    let essential = parseEsentialDetails();
     let constraintSystem = parseConstraintSystem();
-    window.postMessage({ type: "FROM_PAGE", essential: essential, test: constraintSystem });
+    if (!constraintSystem) {
+        return;
+    }
+    window.postMessage({ type: "GET_CONSTRAINT_SYSTEM", constraintSystem });
 }, 500);
 
 

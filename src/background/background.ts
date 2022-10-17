@@ -1,15 +1,9 @@
-window.perfWatch = {};
+import { DOMMessageResponse } from "../types";
+
 window.chromeWindow = {};
 
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    window.perfWatch[sender.tab?.id!] = request.essential || null; 
-
-
-    window.chromeWindow[sender.tab?.id!] = request.test || null;
-
-    
-    
+chrome.runtime.onMessage.addListener(function(request:DOMMessageResponse, sender, sendResponse) { 
+    window.chromeWindow[sender.tab?.id!] = request.constraintSystem || null;
 });
 
 

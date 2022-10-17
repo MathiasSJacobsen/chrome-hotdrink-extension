@@ -37,6 +37,8 @@ export {};ç
 
 */
 
+import { DOMMessageResponse } from "../types";
+
 function injectScript(file_path: string, tag: string) {
     var node = document.getElementsByTagName(tag)[0];
     var script = document.createElement('script');
@@ -49,9 +51,8 @@ injectScript(chrome.extension.getURL('./static/js/injectScript.js'), 'body');
 
 
 window.addEventListener('message', function(event) {
-    if (event.data.type && (event.data.type == "FROM_PAGE"))
-    {
-        chrome.runtime.sendMessage({essential: event.data.essential, test: event.data.test});
+    if (event.data.type && (event.data.type === "GET_CONSTRAINT_SYSTEM")) {        
+        chrome.runtime.sendMessage<DOMMessageResponse>({type: event.data.type, constraintSystem: event.data.constraintSystem});
     }});
     
 export {}   

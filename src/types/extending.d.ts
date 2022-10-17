@@ -1,6 +1,6 @@
 export declare global {
 	interface Window {
 		chromeWindow: any;
-		perfWatch: any;
+		constraintSystem: any;
 	}
 }

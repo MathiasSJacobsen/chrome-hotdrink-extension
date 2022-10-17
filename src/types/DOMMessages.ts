@@ -1,9 +1,16 @@
 export type DOMMessage = {
-    type: 'GET_DOM';
+    type: 'GET_CONSTRAINT_SYSTEM';
 }
 export type DOMMessageResponse = {
-    title: string;
-    headlines: string[];
-    test:any;
+    constraintSystem?: ConstraintSystem;
+    type: DOMMessage;
+}
+
+export type ConstraintSystem = {
+    variables?: [{
+        name: string;
+        value: string | number | boolean;
+    }]
+    // Add more properties here, if needed in the extension
 }
 
