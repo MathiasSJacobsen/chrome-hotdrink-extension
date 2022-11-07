@@ -35,11 +35,11 @@ function App() {
   return (
     <div className="App">
       <div className='contentWrapper'>
-        <p>HotDrink variables:</p>
+        <h1>HotDrink variables</h1>
         {constraintSystem.variables ? constraintSystem.variables.map((item, index) => {
           return (
             <div key={index} >
-              <p>{item.name}: {item.value}</p>
+              <p><b>{item.name}</b>: {item.value}</p>
             </div>
           )
         }) : (<p>This page does not have any constraint systems under the <code>window.constraintSystem</code></p>)}
