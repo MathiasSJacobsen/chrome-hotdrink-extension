@@ -31,7 +31,17 @@ function App() {
    }
 
 
-
+   console.log("cosntraint system:", constraintSystem);
+   constraintSystem.variables?.forEach(variable => {
+      console.log(variable.value);
+      console.log(Array.isArray(variable.value));
+      
+    })
+    const prettyPrintArray = (arr: Array<string | number| boolean>) => {
+      return arr.map((item) => {
+        return item.toString();
+      }).join(", ");
+    }
   return (
     <div className="App">
       <div className='contentWrapper'>
@@ -39,11 +49,11 @@ function App() {
         {constraintSystem.variables ? constraintSystem.variables.map((item, index) => {
           return (
             <div key={index} >
-              <p><b>{item.name}</b>: {item.value}</p>
+              <p><b>{item.name}</b>: {Array.isArray(item.value) ? prettyPrintArray(item.value) : item.value}</p>
             </div>
           )
         }) : (<p>This page does not have any constraint systems under the <code>window.constraintSystem</code></p>)}
-        <button onClick={updateConstraintVariables}>Fetch new values</button>
+        <button onClick={updateConstraintVariables}>Refresh</button>
     </div>
 
     </div>
