@@ -30,13 +30,6 @@ function App() {
     });
    }
 
-
-   console.log("cosntraint system:", constraintSystem);
-   constraintSystem.variables?.forEach(variable => {
-      console.log(variable.value);
-      console.log(Array.isArray(variable.value));
-      
-    })
     const prettyPrintArray = (arr: Array<string | number| boolean>) => {
       return arr.map((item) => {
         return item.toString();
